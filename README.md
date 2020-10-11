@@ -2,9 +2,15 @@
 Generates Roam Research pages from Kindle clippings.
 
 Limitations:
-- Works with Russian language settings in Kindle
-- Currently does not track notes, only highlights
 - For Mac users
 
+## Usage
+Connect your Kindle to computer and run:
+```
+git clone https://github.com/manokhina/kindle-to-roam.git
+cd kindle-to-roam
+python generate_roam.py
+```
+Upload resulting markdown files to Roam.
 
-![](whatever.jpg)
+Known issues: (near)-duplicates

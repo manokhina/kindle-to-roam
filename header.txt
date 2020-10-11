@@ -1,0 +1,8 @@
+- Metadata
+    - Author:: {author}
+    - Tags:: 
+    - Type:: 
+    - Status:: 
+    - Source:: 
+- :hiccup [:hr]
+{note}

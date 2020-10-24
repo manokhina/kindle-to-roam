@@ -1,4 +1,5 @@
-database.json
+kindle-to-roam/database.json
+kindle-to-roam/markdown/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

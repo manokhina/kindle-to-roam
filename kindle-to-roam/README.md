@@ -1,9 +1,6 @@
 # kindle-to-roam
 Generates Roam Research pages from Kindle clippings.
 
-Limitations:
-- For Mac users
-
 ## Usage
 Connect your Kindle to computer and run:
 ```

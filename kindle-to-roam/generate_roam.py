@@ -7,9 +7,7 @@ from collections import defaultdict
 
 class RoamGenerator:
 
-    CLIPPINGS_PATH = "/Volumes/Kindle/documents/My Clippings.txt"
-
-    def __init__(self, markdown_path):
+    def __init__(self, markdown_path, clippings_path):
         """
         :param markdown_path: str
         """
@@ -19,6 +17,7 @@ class RoamGenerator:
         self.diff = defaultdict(list)
         self.markdown_path = markdown_path
         self.existing_database = self.load_database()
+        self.clippings_path = clippings_path
 
     def read_header(self):
         """
@@ -55,7 +54,7 @@ class RoamGenerator:
         """
         Reads clippings directly from Kindle.
         """
-        with open(RoamGenerator.CLIPPINGS_PATH, 'r') as f:
+        with open(self.clippings_path, 'r') as f:
             self.clippings = f.read()
 
     def clear_clippings(self):
@@ -169,9 +168,11 @@ class RoamGenerator:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument('clippings_path', type=str, nargs='?',
+                        default="/Volumes/Kindle/documents/My Clippings.txt",
+                        help='clippings path')
     parser.add_argument('markdown_path', type=str, nargs='?', default="markdown",
                         help='path for saving markdown files')
-
     args = parser.parse_args()
-    generator = RoamGenerator(args.markdown_path)
+    generator = RoamGenerator(args.markdown_path, args.clippings_path)
     generator.run()

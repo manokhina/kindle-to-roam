@@ -54,7 +54,7 @@ class RoamGenerator:
         """
         Reads clippings directly from Kindle.
         """
-        with open(self.clippings_path, 'r') as f:
+        with open(self.clippings_path, 'r', encoding='utf-8') as f:
             self.clippings = f.read()
 
     def clear_clippings(self):
@@ -148,7 +148,9 @@ class RoamGenerator:
             author = book[1]
             note = ''.join(note)
             content = self.page_header.format(author=author, note=note)
-            with open(os.path.join(markdown_path, f"{page_title}.md"), 'w') as f:
+            page_title = re.sub("[<>’‘]", "'", page_title)
+            page_title = re.sub("[|#?]", "", page_title)
+            with open(os.path.join(markdown_path, f"{page_title}.md"), 'w', encoding='utf-8') as f:
                 f.write(content)
         print("Diff dumped to Markdown.")
         # self.dump_database(self.diff)
@@ -168,10 +170,10 @@ class RoamGenerator:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('clippings_path', type=str, nargs='?',
+    parser.add_argument('--clippings_path', type=str, nargs='?',
                         default="/Volumes/Kindle/documents/My Clippings.txt",
                         help='clippings path')
-    parser.add_argument('markdown_path', type=str, nargs='?', default="markdown",
+    parser.add_argument('--markdown_path', type=str, nargs='?', default="markdown",
                         help='path for saving markdown files')
     args = parser.parse_args()
     generator = RoamGenerator(args.markdown_path, args.clippings_path)

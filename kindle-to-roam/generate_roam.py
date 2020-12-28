@@ -9,8 +9,8 @@ class RoamGenerator:
 
     def __init__(self, markdown_path, clippings_path):
         """
-        :param markdown_path: str
-        :param clippings_path: str
+        :param markdown_path: str, path for saving md files
+        :param clippings_path: str, path for downloading the clippings file
         """
         self.clippings = ""
         self.page_header = ""
@@ -30,8 +30,8 @@ class RoamGenerator:
     def load_database(self, database_path="database.json"):
         """
         Loads the database with existing notes.
-        :param database_path: str
-        :return: dict
+        :param database_path: str, existing database path
+        :return: dict, parsed database
         """
         if os.path.isfile(database_path):
             with open(database_path, 'r') as f:
@@ -43,8 +43,8 @@ class RoamGenerator:
     def dump_database(self, db, database_path="database.json"):
         """
         Dumps database to json file.
-        :param db: dict
-        :param database_path: str
+        :param db: dict, database ready to be saved into file
+        :param database_path: str, path for saving the database
         """
         serialized_db = self.serialize_tuples(db)
         with open(database_path, 'w') as f:
@@ -54,7 +54,7 @@ class RoamGenerator:
         """
         Reads clippings directly from Kindle.
         """
-        with open(self.clippings_path, 'r') as f:
+        with open(self.clippings_path, 'r', encoding='utf-8') as f:
             self.clippings = f.read()
 
     def clear_clippings(self):
@@ -88,10 +88,10 @@ class RoamGenerator:
     @staticmethod
     def update_db(db, page_name, text):
         """
-        Adds a note to database.
-        :param db: dict
-        :param page_name: str
-        :param text: str
+        Adds a note to the database.
+        :param db: dict, existing notes database
+        :param page_name: str, page title
+        :param text: str, page text
         :return: db: dict, updated database
         """
         previous_chunk = db[page_name][-1].strip("\n") if db[page_name] else ""
@@ -107,8 +107,8 @@ class RoamGenerator:
     def deserialize_tuples(parsed_json):
         """
         Converts strings in json keys to tuples.
-        :param parsed_json:
-        :return: dict
+        :param parsed_json: json dict loaded from file
+        :return: dict, database with tuples as values
         """
         dict_json = defaultdict(list)
         for key, value in parsed_json.items():
@@ -120,7 +120,7 @@ class RoamGenerator:
     def serialize_tuples(dictionary):
         """
         Converts tuples in json keys to strings.
-        :param dictionary:
+        :param dictionary: existing dict with notes database
         :return: dumpable json
         """
         str_json = defaultdict(list)
@@ -132,7 +132,7 @@ class RoamGenerator:
     def diff_to_markdown(self, markdown_path):
         """
         Dumps difference to markdown files.
-        :param markdown_path: str
+        :param markdown_path: str, path for saving md files
         """
         if not os.path.exists(markdown_path):
             os.makedirs(markdown_path)
@@ -141,7 +141,9 @@ class RoamGenerator:
             author = book[1]
             note = ''.join(note)
             content = self.page_header.format(author=author, note=note)
-            with open(os.path.join(markdown_path, f"{page_title}.md"), 'w') as f:
+            page_title = re.sub("[<>’‘]", "'", page_title)
+            page_title = re.sub("[|#?]", "", page_title)
+            with open(os.path.join(markdown_path, f"{page_title}.md"), 'w', encoding='utf-8') as f:
                 f.write(content)
         print("Diff dumped to Markdown.")
 
@@ -160,10 +162,10 @@ class RoamGenerator:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('clippings_path', type=str, nargs='?',
+    parser.add_argument('--clippings_path', type=str, nargs='?',
                         default="/Volumes/Kindle/documents/My Clippings.txt",
                         help='clippings path')
-    parser.add_argument('markdown_path', type=str, nargs='?', default="markdown",
+    parser.add_argument('--markdown_path', type=str, nargs='?', default="markdown",
                         help='path for saving markdown files')
     args = parser.parse_args()
     generator = RoamGenerator(args.markdown_path, args.clippings_path)

@@ -10,6 +10,7 @@ class RoamGenerator:
     def __init__(self, markdown_path, clippings_path):
         """
         :param markdown_path: str
+        :param clippings_path: str
         """
         self.clippings = ""
         self.page_header = ""
@@ -39,7 +40,6 @@ class RoamGenerator:
             database = defaultdict(list)
         return self.deserialize_tuples(database)
 
-    # @staticmethod
     def dump_database(self, db, database_path="database.json"):
         """
         Dumps database to json file.
@@ -84,13 +84,6 @@ class RoamGenerator:
 
                 elif text not in self.diff[page_name]:
                     self.diff[page_name].append(f"- {text}\n")
-    #         if 'Ваш выделенный отрывок в месте' in note:
-        #         text = note.split('\n\n')[-1]
-        #         previous_chunk = result[head][-1].strip("\n") if result[head] else None
-        #         if result[head] and previous_chunk and text.startswith(previous_chunk.strip("- ")):
-        #             del result[head][-1]
-        #         if result[head] and previous_chunk.endswith(text): continue
-        #         result[head].append(f"- {text}\n")
 
     @staticmethod
     def update_db(db, page_name, text):
@@ -99,7 +92,7 @@ class RoamGenerator:
         :param db: dict
         :param page_name: str
         :param text: str
-        :return:
+        :return: db: dict, updated database
         """
         previous_chunk = db[page_name][-1].strip("\n") if db[page_name] else ""
 
@@ -113,7 +106,7 @@ class RoamGenerator:
     @staticmethod
     def deserialize_tuples(parsed_json):
         """
-        Makes strings in json keys tuples.
+        Converts strings in json keys to tuples.
         :param parsed_json:
         :return: dict
         """
@@ -126,7 +119,7 @@ class RoamGenerator:
     @staticmethod
     def serialize_tuples(dictionary):
         """
-        Makes tuples in json keys strings.
+        Converts tuples in json keys to strings.
         :param dictionary:
         :return: dumpable json
         """
@@ -151,7 +144,6 @@ class RoamGenerator:
             with open(os.path.join(markdown_path, f"{page_title}.md"), 'w') as f:
                 f.write(content)
         print("Diff dumped to Markdown.")
-        # self.dump_database(self.diff)
 
     def run(self):
         """

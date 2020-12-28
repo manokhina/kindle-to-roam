@@ -7,25 +7,26 @@ from collections import defaultdict
 
 class RoamGenerator:
 
-    def __init__(self, markdown_path, clippings_path):
+    def __init__(self, markdown_path, clippings_path, header_file):
         """
         :param markdown_path: str, path for saving md files
         :param clippings_path: str, path for downloading the clippings file
         """
         self.clippings = ""
-        self.page_header = ""
+        self.page_header = self.read_header(header_file)
         self.clippings_list = list()
         self.diff = defaultdict(list)
         self.markdown_path = markdown_path
         self.existing_database = self.load_database()
         self.clippings_path = clippings_path
 
-    def read_header(self):
+    def read_header(self, header_file):
         """
         Reads header template for the page.
         """
-        with open("header.txt", 'r') as f:
-            self.page_header = f.read()
+        with open(header_file, 'r') as f:
+            page_header = f.read()
+        return page_header
 
     def load_database(self, database_path="database.json"):
         """
@@ -167,6 +168,8 @@ if __name__ == "__main__":
                         help='clippings path')
     parser.add_argument('--markdown_path', type=str, nargs='?', default="markdown",
                         help='path for saving markdown files')
+    parser.add_argument('--header_file', type=str, nargs='?', default="header.txt",
+                        help='path to custom header file')
     args = parser.parse_args()
-    generator = RoamGenerator(args.markdown_path, args.clippings_path)
+    generator = RoamGenerator(args.markdown_path, args.clippings_path, args.header_file)
     generator.run()

@@ -20,5 +20,3 @@ If you want to use a different header for your Roam pages, save the header templ
 python3 generate_roam.py --header_file "another_header.txt"
 ```
 Upload resulting markdown files to Roam.
-
-Known issues: (near)-duplicates.

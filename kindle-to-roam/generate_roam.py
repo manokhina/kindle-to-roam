@@ -143,7 +143,7 @@ class RoamGenerator:
             note = ''.join(note)
             content = self.page_header.format(author=author, note=note)
             page_title = re.sub("[<>’‘]", "'", page_title)
-            page_title = re.sub("[|#?]", "", page_title)
+            page_title = re.sub("[:|#?]", "", page_title)
             with open(os.path.join(markdown_path, f"{page_title}.md"), 'w', encoding='utf-8') as f:
                 f.write(content)
         print("Diff dumped to Markdown.")
@@ -153,7 +153,6 @@ class RoamGenerator:
         Runs the whole pipeline.
         """
         print("Start running...")
-        self.read_header()
         self.read_clippings()
         self.clear_clippings()
         self.process_clippings()

@@ -76,11 +76,11 @@ class RoamGenerator:
             author = r.group() if r else ''
 
             page_name = (title, author)
-            if ("Ваш выделенный отрывок в месте" or "Your Highlight at location") in note:
+            if "Ваш выделенный отрывок в месте" or "Your Highlight at location" in note:
                 text = note.split('\n\n')[-1]
+                print(page_name)
 
                 self.existing_database = self.update_db(self.existing_database, page_name, text)
-
                 if page_name not in self.diff or text not in self.diff[page_name]:
                     self.diff = self.update_db(self.diff, page_name, text)
 
@@ -135,6 +135,7 @@ class RoamGenerator:
         """
         if not os.path.exists(markdown_path):
             os.makedirs(markdown_path)
+        # print("DIFF ", self.diff)
         for book, note in self.diff.items():
             page_title = book[0]
             author = book[1]
